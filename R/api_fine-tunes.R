@@ -1,17 +1,7 @@
-#' API fine tunes: roxygen template
-#'
-#' @inherit request params return
-#' @keywords internal
-#'
-fine_tunes_roxygen_tpl <- function(
-    api_key
-) NULL
-
-
 #' API fine tunes: create (model) request
 #'
-#' \url{https://platform.openai.com/docs/api-reference/fine-tunes/create}
-#' @inherit fine_tunes_roxygen_tpl params return
+#' To get more details, visit https://platform.openai.com/docs/api-reference/fine-tunes/create
+#' @inherit request params return
 #' @param training_file string, the ID of an uploaded file that contains
 #' training data. See files_upload_request().
 #' @param validation_file string/NULL, the ID of an uploaded file that contains
@@ -19,7 +9,7 @@ fine_tunes_roxygen_tpl <- function(
 #' @param model string, the name of the base model to fine-tune.
 #' You can select one of "ada", "babbage", "curie", "davinci", or a fine-tuned
 #' model created after 2022-04-21. To learn more about these models, see the
-#' \href{https://platform.openai.com/docs/models}{Models} documentation.
+#' models (https://platform.openai.com/docs/models) documentation.
 #' @param n_epochs integer, the number of epochs to train the model for.
 #' An epoch refers to one full cycle through the training dataset.
 #' @param batch_size integer/NULL, the batch size to use for training.
@@ -117,8 +107,8 @@ fine_tunes_create_request <- function(
 
 #' API fine tunes: list request
 #'
-#' \url{https://platform.openai.com/docs/api-reference/fine-tunes/list}
-#' @inherit fine_tunes_roxygen_tpl params return
+#' To get more details, visit https://platform.openai.com/docs/api-reference/fine-tunes/list
+#' @inherit request params return
 #' @export
 #'
 #' @examples
