@@ -17,22 +17,20 @@
 #' @export
 #'
 embeddings_create_request <- function(
-    api_key,
     input,
     model,
     encoding_format = NULL,
-    user = NULL
-) {
+    user = NULL,
+    api_key = api_get_key()
+  ) {
+
   # asserts
   stopifnot(
-    "`input` must be a non-empty character vector" =
-        checkmate::testCharacter(input, min.chars = 1, min.len = 1),
-    "`model` must be a non-empty string" =
-        checkmate::testString(model, min.chars = 1),
+    "`input` must be a non-empty character vector" = checkmate::testCharacter(input, min.chars = 1, min.len = 1),
+    "`model` must be a non-empty string" = checkmate::testString(model, min.chars = 1),
     "`encoding_format` must be NULL or a non-empty string" =
         checkmate::testString(encoding_format, min.chars = 1, null.ok = TRUE),
-    "`user` must be NULL or a non-empty string" =
-        checkmate::testString(user, min.chars = 1, null.ok = TRUE)
+    "`user` must be NULL or a non-empty string" = checkmate::testString(user, min.chars = 1, null.ok = TRUE)
   )
 
   request(
@@ -54,25 +52,24 @@ embeddings_create_request <- function(
 #' https://platform.openai.com/docs/api-reference/embeddings/object
 #' https://platform.openai.com/docs/guides/embeddings
 #' @inherit request params return
-#' @param index integer, The index of the embedding in the list of embeddings.
+#' @param index integer, The index of the embedding in the list of embeddings
 #' @param embedding double vector, the embedding vector, which is a "list of floats". The length of vector depends on
 #' the model as listed in the embedding guide.
-#' @param object string, the object type, which is always "embedding".
+#' @param object string, the object type, which is always "embedding"
 #' @export
 #'
 embeddings_object_request <- function(
-    api_key,
     index,
     embedding,
-    object
-) {
+    object,
+    api_key = api_get_key()
+  ) {
+
   # asserts
   stopifnot(
     "`index` must be a double" = checkmate::testDouble(index, len = 1),
-    "`embedding` must be a double vector" =
-        checkmate::testDouble(embedding, min.len = 1),
-    "`object` must a non-empty string" =
-        checkmate::testString(object, min.chars = 1)
+    "`embedding` must be a double vector" = checkmate::testDouble(embedding, min.len = 1),
+    "`object` must a non-empty string" = checkmate::testString(object, min.chars = 1)
   )
 
   request(

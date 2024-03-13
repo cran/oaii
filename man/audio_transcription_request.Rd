@@ -5,47 +5,40 @@
 \title{API audio: speech to text (transcryption)}
 \usage{
 audio_transcription_request(
-  api_key,
   file,
   model,
   language = NULL,
   prompt = NULL,
   response_format = NULL,
   temperature = NULL,
-  file_type = NULL
+  file_type = NULL,
+  api_key = api_get_key()
 )
 }
 \arguments{
+\item{file}{string/raw, content of the audio file or path to the audio file to transcribe, in one of these formats:
+flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm.}
+
+\item{model}{string, ID of the model to use. Only 'whisper-1' is currently available.}
+
+\item{language}{NULL/string, the language of the input audio. Supplying the input language in ISO-639-1 format will
+improve accuracy and latency. See https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}
+
+\item{prompt}{NULL/string, an optional text to guide the model's style or continue a previous audio segment. The
+prompt (https://platform.openai.com/docs/guides/speech-to-text/prompting) should match the audio language.}
+
+\item{response_format}{NULL/string, The format of the transcript output, in one of these options: json (default),
+text, srt, verbose_json, or vtt.}
+
+\item{temperature}{NULL/double, the sampling temperature, between 0 and 1. Higher values like 0.8 will make the
+output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model
+will use log probability to automatically increase the temperature until certain thresholds are hit. 0 is default.}
+
+\item{file_type}{NULL/string mime type of file (e.g. "audio/mpeg"). If NULL (default), will be guess by
+mime::guess_type() when needed.}
+
 \item{api_key}{string, OpenAI API key
 (see https://platform.openai.com/account/api-keys)}
-
-\item{file}{string/raw, content of the audio file or path to the audio file
-to transcribe, in one of these formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg,
-wav, or webm.}
-
-\item{model}{string, ID of the model to use. Only 'whisper-1' is currently
-available.}
-
-\item{language}{NULL/string, the language of the input audio. Supplying the input
-language in ISO-639-1 format will improve accuracy and latency. See
-https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes}
-
-\item{prompt}{NULL/string, an optional text to guide the model's style or continue
-a previous audio segment. The prompt
-(https://platform.openai.com/docs/guides/speech-to-text/prompting) should
-match the audio language.}
-
-\item{response_format}{NULL/string, The format of the transcript output, in one
-of these options: json (default), text, srt, verbose_json, or vtt.}
-
-\item{temperature}{NULL/double, the sampling temperature, between 0 and 1. Higher
-values like 0.8 will make the output more random, while lower values like 0.2
-will make it more focused and deterministic. If set to 0, the model will use
-log probability to automatically increase the temperature until certain
-thresholds are hit. 0 is default.}
-
-\item{file_type}{NULL/string mime type of file (e.g. "audio/mpeg").
-If NULL (default), will be guess by mime::guess_type() when needed.}
 }
 \value{
 \link[httr]{content} of the httr \link[httr]{response} object
@@ -61,7 +54,6 @@ https://platform.openai.com/docs/guides/speech-to-text
 \examples{
 \dontrun{
 res_content <- audio_speech_request(
-  "my-secret-api-key-string",
   "path/to/audio/file.mp3",
   "whisper-1",
   "en",

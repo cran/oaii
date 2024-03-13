@@ -21,8 +21,7 @@
 #' gpt-4-vision-preview model. Defaults to false.
 #' @param top_logprobs NULL/int, an integer between 0 and 5 specifying the number of most likely tokens to return at
 #' each token position, each with an associated log probability. logprobs must be set to true if this parameter is used.
-#' @param max_tokens NULL/int, the maximum number of tokens to generate
-#' in the chat completion
+#' @param max_tokens NULL/int, the maximum number of tokens to generate in the chat completion
 #' @param n NULL/int, how many chat completion choices to generate for each input message.
 #' @param presence_penalty NULL/double, number between -2.0 and 2.0. Positive values penalize new tokens based on
 #' whether they appear in the text so far, increasing the model's likelihood to talk about new topics. See
@@ -51,7 +50,8 @@
 #' Use this to provide a list of functions the model may generate JSON inputs for. Example value:
 #' \preformatted{
 #' list(
-#'   # string (required), the type of the tool. Currently, only function is supported
+#'   # string (required), the type of the tool. Currently, only
+#'   # 'function' is supported
 #'   type = "function",
 #'   
 #'   # list (required)
@@ -60,11 +60,13 @@
 #'     description = "some description",
 #'
 #'     # string (required), the name of the function to be called.
-#'     # Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64
+#'     # Must be a-z, A-Z, 0-9, or contain underscores and dashes,
+#'     # with a maximum length of 64
 #'     name = "functionname",
 #'     
-#'     #list (optional), the parameters the functions accepts, described as a JSON Schema object.
-#'     # Omitting parameters defines a function with an empty parameter list.
+#'     # list (optional), the parameters the functions accepts,
+#'     # described as a JSON Schema object. Omitting parameters
+#'     # defines a function with an empty parameter list.
 #'     parameters = list()
 #'   )
 #' )
@@ -74,15 +76,14 @@
 #' message or calling a function. Specifying a particular function via list
 #' `list(type = "function", function": list(name: "my_function"))` forces the model to call that function. `none` is the
 #' default when no functions are present, `auto` is the default if functions are present.
-#' @param user NULL/string, a unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse.
-#' https://platform.openai.com/docs/guides/safety-best-practices/end-user-ids
+#' @param user NULL/string, a unique identifier representing your end-user, which can help OpenAI to monitor and detect
+#' abuse. See https://platform.openai.com/docs/guides/safety-best-practices/end-user-ids
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #'   question <- dialog_df("hi")
 #'   res_content <- chat_request(
-#'     api_key = "my-secret-api-key-string",
 #'     messages = question,
 #'     model = "gpt-3.5-turbo"
 #'   )
@@ -94,7 +95,6 @@
 #' }
 #'
 chat_request <- function(
-    api_key,
     messages,
     model,
     frequency_penalty = NULL,
@@ -112,8 +112,10 @@ chat_request <- function(
     top_p = NULL,
     tools = NULL,
     tool_choice = NULL,
-    user = NULL
-) {
+    user = NULL,
+    api_key = api_get_key()
+  ) {
+
   # asserts
   stopifnot(
     "`messages` must be a data.frame" = checkmate::testDataFrame(messages),
@@ -181,4 +183,40 @@ chat_fetch_messages <- function(res_content) {
       finish_reason = choice$finish_reason
     )
   }))
+}
+
+#' Feedback - ask chat and receive reply
+#'
+#' Simple \link{chat_request} wrapper - send text to chat and get response.
+#' @inheritParams chat_request
+#' @param question string, question text
+#' @param print flag, If TRUE, print the answer on the console
+#' @return string, chat answer
+#' @export
+#'
+feedback <- function(question, model = "gpt-3.5-turbo", max_tokens = NULL, print = TRUE) {
+
+  # asserts
+  stopifnot(
+    "`print` must be a flag" = checkmate::testFlag(print)
+  )
+
+  # request
+  res_content <- chat_request(
+    messages = dialog_df(question),
+    model = model,
+    max_tokens = max_tokens
+  )
+  if (is_error(res_content)) {
+    NA_character_
+  }
+  else {
+    feedback_df <- chat_fetch_messages(res_content)
+    feedback <- paste0(feedback_df$content, collapse = " ")
+    if (print) {
+      cat(feedback)
+      invisible(feedback)
+    }
+    else feedback
+  }
 }

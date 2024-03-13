@@ -5,7 +5,6 @@
 \title{API images: create (generator) request}
 \usage{
 images_generator_request(
-  api_key,
   prompt,
   model = NULL,
   n = NULL,
@@ -13,13 +12,11 @@ images_generator_request(
   response_format = NULL,
   size = NULL,
   style = NULL,
-  user = NULL
+  user = NULL,
+  api_key = api_get_key()
 )
 }
 \arguments{
-\item{api_key}{string, OpenAI API key
-(see https://platform.openai.com/account/api-keys)}
-
 \item{prompt}{string, a text description of the desired image(s). The maximum length is 1000 characters for dall-e-2
 and 4000 characters for dall-e-3.}
 
@@ -27,8 +24,8 @@ and 4000 characters for dall-e-3.}
 
 \item{n}{NULL/int, the number of images to generate. Must be between 1 and 10. For dall-e-3, only n=1 is supported.}
 
-\item{quality}{NULL/string, the quality of the image that will be generated. `hd` creates images with finer details and
-greater consistency across the image. This param is only supported for dall-e-3. Defaults to `standard`.}
+\item{quality}{NULL/string, the quality of the image that will be generated. `hd` creates images with finer details
+and greater consistency across the image. This param is only supported for dall-e-3. Defaults to `standard`.}
 
 \item{response_format}{NULL/string, the format in which the generated images are returned. Must be one of "url" or
 "b64_json".}
@@ -41,6 +38,9 @@ causes the model to lean towards generating hyper-real and dramatic images. Natu
 natural, less hyper-real looking images. This param is only supported for dall-e-3.}
 
 \item{user}{string a unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse.}
+
+\item{api_key}{string, OpenAI API key
+(see https://platform.openai.com/account/api-keys)}
 }
 \value{
 \link[httr]{content} of the httr \link[httr]{response} object
